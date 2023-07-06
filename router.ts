@@ -64,8 +64,8 @@ export default class Router {
       if (handlers === undefined) {
         return new Response("Bad Request", { status: 400 });
       }
-      for (const [path, handler] of Object.entries(handlers)) {
-        const pattern = new URLPattern(path, url.origin);
+      for (const [pathname, handler] of Object.entries(handlers)) {
+        const pattern = new URLPattern({ pathname });
         if (pattern.test(url)) {
           return handler(req, info);
         }
@@ -73,4 +73,26 @@ export default class Router {
       return new Response("Not Found", { status: 404 });
     };
   }
+
+  routeDescriptions(): RouteDescription[] {
+    const descriptions: RouteDescription[] = Object.entries(this.routes)
+      .flatMap(([method, handlers]) => {
+        return Object.keys(handlers).map((path) => ({
+          method,
+          path,
+        }));
+      });
+    return descriptions;
+  }
 }
+
+interface RouteDescription {
+  method: string;
+  path: string;
+}
+
+interface Context {
+  url: URL,
+
+}
+type altHandler = (req: Request, ctx: Context) => Response;

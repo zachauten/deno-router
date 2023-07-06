@@ -4,7 +4,7 @@ import { Router } from "./mod.ts";
 Deno.test("GET request", async () => {
   const expected = "foo!";
   const router = new Router();
-  router.get("foo", (_req) => new Response(expected));
+  router.get("/foo", (_req) => new Response(expected));
   const controller = new AbortController();
   const server = Deno.serve({ signal: controller.signal }, router.handler);
   const res = await fetch("http://127.0.0.1:8000/foo");
