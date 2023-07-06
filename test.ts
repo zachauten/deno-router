@@ -4,7 +4,7 @@ import { Router } from "./mod.ts";
 Deno.test("GET request", async () => {
   const expected = "foo!";
   const router = new Router();
-  router.get("foo", _req => new Response(expected));
+  router.get("foo", (_req) => new Response(expected));
   const controller = new AbortController();
   const server = Deno.serve({ signal: controller.signal }, router.handler);
   const res = await fetch("http://127.0.0.1:8000/foo");
@@ -17,7 +17,7 @@ Deno.test("GET request", async () => {
 Deno.test("GET URLPattern", async () => {
   const expected = "123";
   const router = new Router();
-  router.get("/bar/:id", req => {
+  router.get("/bar/:id", (req) => {
     const url = new URL(req.url);
     const pattern = new URLPattern("/bar/:id", url.origin);
     const match = pattern.exec(url);
